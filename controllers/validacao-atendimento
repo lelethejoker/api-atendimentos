@@ -16,8 +16,11 @@ function validarAtendimento(dados, parcial = false) {
     if(dados.status && !statusValidos.includes(dados.status)) {
         throw new AppError("Status inválido. Por favor, selecione um status válido.", 400);
     }
-    if(!parcial && (!dados.data || isNaN(Date.parse(dados.data)))) {
+    if(!parcial && !dados.data) {
         throw new AppError("Dados incompletos. Insira uma data válida para o atendimento.", 400);
+    }
+    if(dados.data && isNaN(Date.parse(dados.data))) {
+        throw new AppError("Data inválida. Insira uma data válida para o atendimento.", 400);
     }
 }
 

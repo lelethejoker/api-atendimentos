@@ -3,28 +3,31 @@ const AppError = require('../utils/appError');
 
 class AtendimentoModel {
     async listar() {
-        const sql = 'SELECT * FROM atendimento';
+        const sql = 'SELECT id, DATA AS data, servico, cliente, STATUS AS status FROM atendimento';
         try {
             const [atendimentos] = await conexao.query(sql);
             if(atendimentos.length === 0) {
                 throw new AppError("Nenhum atendimento encontrado", 404);
             }
-            return atendimentos[0];
+            return atendimentos;
         } catch (erro) {
             console.error('[atendimentoModel].listar', erro);
             throw new AppError("Erro ao listar atendimentos", 500);
         }
     }
     async buscarPorId(id) {
-        const sql = 'SELECT * FROM atendimento WHERE id = ?';
+        const sql = 'SELECT id, DATA AS data, servico, cliente, STATUS AS status FROM atendimento WHERE id = ?';
         try {
             const [atendimentos] = await conexao.query(sql, [id]);
             if(atendimentos.length === 0) {
                 throw new AppError("Atendimento não encontrado", 404);
             }
-            return atendimentos[0];
+            return atendimentos;
         } catch (erro) {
             console.error('[atendimentoModel].listar', erro);
+            if(error instanceof AppError) {
+                throw error;
+            }
             throw new AppError("Erro ao buscar atendimento", 500);
         }
     }
@@ -66,6 +69,9 @@ class AtendimentoModel {
             }
         } catch (AppError) {
             console.error('[atendimentoModel].atualizar', AppError);
+            if(error instanceof AppError) {
+                throw error;
+            }
             throw AppError;
         }
     }
@@ -80,6 +86,9 @@ class AtendimentoModel {
             return {id};
         } catch (AppError) {
             console.error('[atendimentoModel].deletar', AppError);
+            if(error instanceof AppError) {
+                throw error;
+            }
             throw AppError;
         }
 }

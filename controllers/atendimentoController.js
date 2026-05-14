@@ -14,11 +14,11 @@ class AtendimentoController {
         return atendimentoModel.criar(novoAtendimento);
     }
     async atualizar(dadosAtendimento) {
-        validarAtendimento.validarAtendimento(dadosAtendimento, true);
+        validarAtendimento.validarAtendimento(dadosAtendimento);
         return atendimentoModel.atualizar(dadosAtendimento);
     }
     async atualizarParcial(dadosAtendimento) {
-        validarAtendimento.validarAtendimento(dadosAtendimento);
+        validarAtendimento.validarAtendimento(dadosAtendimento, true);
         return atendimentoModel.atualizarParcial(dadosAtendimento);
     }
     async deletar(id) {

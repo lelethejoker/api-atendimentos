@@ -43,11 +43,25 @@ const atualizarAtendimento = async (req, res, next) => {
         next(error);
     }
 };
+
+const atualizarParcialAtendimento = async (req, res, next) => {
+    try {
+        const dadosAtendimento = {
+            id: req.params.id,
+            ...req.body
+        }
+        const resposta = await atendimentoController.atualizarParcial(dadosAtendimento);
+        res.status(200).json(resposta);
+    } catch (error) {
+        next(error);
+    }
+};
+
 router.put('/atendimentos/:id', 
             atualizarAtendimento);
 
 router.patch('/atendimentos/:id', 
-            atualizarAtendimento);
+            atualizarParcialAtendimento);
 
 router.delete('/atendimentos/:id', async (req, res, next) => {
     try {
