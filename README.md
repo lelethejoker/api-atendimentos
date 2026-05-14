@@ -73,7 +73,7 @@ node index.js
 
 ### GET
 ```http
-GET /atendimentos
+GET /atendimentos/:id
 ```
 
 ### POST
