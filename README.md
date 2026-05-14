@@ -98,7 +98,7 @@ DELETE /atendimentos/:id
 
 ## Próximas atualizações planejadas
 
-- Middleware global de erro
+- ~~Middleware global de erro~~
 - Validação de dados
 - JWT Authentication
 - Paginação
