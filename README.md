@@ -90,6 +90,10 @@ node index.js
 ```http
 GET /atendimentos/:id
 ```
+ou
+```http
+GET /atendimentos
+```
 
 ### POST
 ```http
