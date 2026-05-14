@@ -24,6 +24,7 @@ controllers/
 infraestrutura/
 models/
 routers/
+utils/
 ```
 
 ## Padrões utilizados no projeto
