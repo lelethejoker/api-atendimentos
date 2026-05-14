@@ -24,6 +24,7 @@ controllers/
 infraestrutura/
 models/
 routers/
+utils/
 ```
 
 ## Padrões utilizados no projeto
@@ -50,6 +51,20 @@ Mudanças no Router para:
 
 ### Integração com mySQL2
 Substituição do driver legado mysql para o mysql2/promise
+
+### Sistema de Validação
+- validação de dados obrigatórios
+- validação de status
+- validação de datas
+
+### Tratamento de Erros Semântico
+- implementação da classe AppError
+- respostas HTTP padronizadas
+- diferenciação entre erros 400/404/500
+
+### Busca de Recursos
+- busca geral de atendimentos
+- busca individual por ID
 
 ## Instalação
 
@@ -99,9 +114,11 @@ DELETE /atendimentos/:id
 ## Próximas atualizações planejadas
 
 - ~~Middleware global de erro~~
-- Validação de dados
+- ~~Validação de dados~~
+- ~~Busca por ID~~
+- ~~Busca geral~~
 - JWT Authentication
 - Paginação
-- Filtros
+- Filtros avançados
 - Service Layer
 - Testes automatizados
