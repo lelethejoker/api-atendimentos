@@ -1,4 +1,4 @@
-const routerAtendimento = require('./atendimentoroute');    
+const routerAtendimento = require('./atendimentoRoute');    
 
 
 module.exports = (app) => {

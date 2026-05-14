@@ -1,0 +1,24 @@
+const AppError = require('../utils/appError');
+
+function validarAtendimento(dados, parcial = false) {
+    const statusValidos = [
+        'Pendente', 
+        'Realizado com sucesso',
+         'Cancelado'
+];
+
+    if(!parcial && !dados.cliente) {
+        throw new AppError("Dados incompletos. 'cliente' é obrigatório.", 400);
+    }
+    if(!parcial && !dados.servico) {
+        throw new AppError("Dados incompletos. 'servico' é obrigatório.", 400);
+    }
+    if(dados.status && !statusValidos.includes(dados.status)) {
+        throw new AppError("Status inválido. Por favor, selecione um status válido.", 400);
+    }
+    if(!parcial && (!dados.data || isNaN(Date.parse(dados.data)))) {
+        throw new AppError("Dados incompletos. Insira uma data válida para o atendimento.", 400);
+    }
+}
+
+module.exports = { validarAtendimento };

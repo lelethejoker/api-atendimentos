@@ -6,19 +6,26 @@ const conexao = require('./infraestrutura/conexao');
 const tabelas = require('./infraestrutura/tabelas');
 
 app.use(express.json());
-tabelas.init(conexao);
 router(app);
 
+async function iniciarServidor() {
+    try {
+        await conexao.query('SELECT 1');
+        await tabelas.init(conexao);
 
-app.listen(port, (err) => {
-    if (err) {
-       console.error('Erro ao iniciar o servidor:', err);
-    } else {
-        console.log(`Servidor esta rodando na porta ${port}`);
+        app.listen(port, () => {
+            console.log(`Servidor esta rodando na porta ${port}`);
+        });
+    } catch (error) {
+        console.error('Erro ao iniciar o servidor:', error);
     }
-});
+}
+
+iniciarServidor();
 
 app.use((err, req, res, next) => {
     console.error('Erro:', err);
-    res.status(500).json({ error: 'Ocorreu um erro no servidor.' });
+    res.status(err.statusCode || 500).json({
+        error: err.message || 'Erro Interno do Servidor'
+    });
 });

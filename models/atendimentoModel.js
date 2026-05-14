@@ -1,13 +1,31 @@
 const conexao = require('../infraestrutura/conexao');
+const AppError = require('../utils/appError');
+
 class AtendimentoModel {
     async listar() {
         const sql = 'SELECT * FROM atendimento';
         try {
             const [atendimentos] = await conexao.query(sql);
-            return atendimentos;
+            if(atendimentos.length === 0) {
+                throw new AppError("Nenhum atendimento encontrado", 404);
+            }
+            return atendimentos[0];
         } catch (erro) {
             console.error('[atendimentoModel].listar', erro);
-            throw erro;
+            throw new AppError("Erro ao listar atendimentos", 500);
+        }
+    }
+    async buscarPorId(id) {
+        const sql = 'SELECT * FROM atendimento WHERE id = ?';
+        try {
+            const [atendimentos] = await conexao.query(sql, [id]);
+            if(atendimentos.length === 0) {
+                throw new AppError("Atendimento não encontrado", 404);
+            }
+            return atendimentos[0];
+        } catch (erro) {
+            console.error('[atendimentoModel].listar', erro);
+            throw new AppError("Erro ao buscar atendimento", 500);
         }
     }
     async criar(novoAtendimento) {
@@ -16,19 +34,19 @@ class AtendimentoModel {
             const [res] = await conexao.query(sql, novoAtendimento);
             console.log('Atendimento criado com sucesso!');
             return{id: res.insertId, ...novoAtendimento};
-        } catch (error) {
-            console.error('[atendimentoModel].criar', error);
-            throw error;
+        } catch (AppError) {
+            console.error('[atendimentoModel].criar', AppError);
+            throw AppError;
         }
     }
     async atualizar(atualizarAtendimento) {
-        return this._atualizarCampos(atualizarAtendimento);
+        return this.atualizarCampos(atualizarAtendimento);
     }
-    async editarParcial(editarAtendimento) {
-        return this._atualizarCampos(editarAtendimento);
+    async atualizarParcial(atualizarAtendimento) {
+        return this.atualizarCampos(atualizarAtendimento);
     }
 
-    async _atualizarCampos(dadosAtendimento){
+    async atualizarCampos(dadosAtendimento){
         const {id, ...campos} = dadosAtendimento;
         
         const sql = 'UPDATE atendimento SET ? WHERE id=?';
@@ -37,7 +55,7 @@ class AtendimentoModel {
             const [res] = await conexao.query(sql, [campos, id]);
 
             if(res.affectedRows === 0) {
-                throw new Error("Atendimento não encontrado.");
+                throw new AppError("Atendimento não encontrado", 404);
             }
             
             console.log('Atendimento Atualizado com sucesso')
@@ -46,9 +64,9 @@ class AtendimentoModel {
                 id,
                 ...campos
             }
-        } catch (error) {
-            console.error('[atendimentoModel].atualizar', error);
-            throw error;
+        } catch (AppError) {
+            console.error('[atendimentoModel].atualizar', AppError);
+            throw AppError;
         }
     }
     async deletar(id) {
@@ -56,13 +74,13 @@ class AtendimentoModel {
         try {
             const [res] = await conexao.query(sql, [id]);
             if(res.affectedRows === 0){
-                throw new Error ("Atendimento não encontrado");
+                throw new AppError("Atendimento não encontrado", 404);
             }
             console.log('Atendimento deletado com sucesso!');
             return {id};
-        } catch (error) {
-            console.error('[atendimentoModel].deletar', error);
-            throw error;
+        } catch (AppError) {
+            console.error('[atendimentoModel].deletar', AppError);
+            throw AppError;
         }
 }
 }
