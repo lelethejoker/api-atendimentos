@@ -6,7 +6,7 @@ class AtendimentoModel {
             const [atendimentos] = await conexao.query(sql);
             return atendimentos;
         } catch (erro) {
-            console.log('Erro ao listar atendimentos: ' + erro);
+            console.error('[atendimentoModel].listar', erro);
             throw erro;
         }
     }
@@ -17,8 +17,8 @@ class AtendimentoModel {
             console.log('Atendimento criado com sucesso!');
             return{id: res.insertId, ...novoAtendimento};
         } catch (error) {
-            console.error('Erro ao criar atendimento: ', error);
-            throw erro;
+            console.error('[atendimentoModel].criar', error);
+            throw error;
         }
     }
     async atualizar(atualizarAtendimento) {
@@ -47,7 +47,7 @@ class AtendimentoModel {
                 ...campos
             }
         } catch (error) {
-            console.error("Erro ao atualizar atendimento: ", error);
+            console.error('[atendimentoModel].atualizar', error);
             throw error;
         }
     }
@@ -59,9 +59,9 @@ class AtendimentoModel {
                 throw new Error ("Atendimento não encontrado");
             }
             console.log('Atendimento deletado com sucesso!');
-            return {id: deletarAtendimento.id};
+            return {id};
         } catch (error) {
-            console.error('Erro ao deletar atendimento: ', error);
+            console.error('[atendimentoModel].deletar', error);
             throw error;
         }
 }
