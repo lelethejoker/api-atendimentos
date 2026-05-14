@@ -2,33 +2,52 @@ const {Router} = require('express');
 const router = Router();
 const atendimentoController = require('../controllers/atendimentoController');
 
-router.get('/atendimentos', (req, res) => {
-    const listaAtendimentos = atendimentoController.buscar();
-    listaAtendimentos.then(atendimentos => res.status(200).json(atendimentos)).catch(error => res.status(400).json(error.message));
+router.get('/atendimentos',  async (req, res, next) => {
+    
+    try {
+        const listaAtendimentos = await atendimentoController.buscar();
+        res.status(200).json(listaAtendimentos);
+    } catch (error) {
+        next(error);
+    }
 });
 
-router.post('/atendimentos', (req, res) => {
-    const novoAtendimento = req.query;
-    const resposta = atendimentoController.criar(novoAtendimento);
-    resposta.then(result => res.status(201).json(result)).catch(error => res.status(400).json(error.message));
+router.post('/atendimentos', async (req, res, next) => {
+    try {
+        const resposta = await atendimentoController.criar(req.body);
+        res.status(201).json(resposta);
+    } catch (error) {
+        next(error);
+    }
 });
 
-router.put('/atendimentos/:id', (req, res) => {
-    const atualizarAtendimento = req.query;
-    const resposta = atendimentoController.atualizar(atualizarAtendimento);
-    resposta.then(result => res.status(200).json(result)).catch(error => res.status(400).json(error.message));
-});
+const atualizarAtendimento = async (req, res, next) => {
+    const dadosAtendimento = req.body;
+    try {
+        const dadosAtendimento = {
+            id: req.params.id,
+            ...dadosAtendimento
+        }
+        const resposta = await atendimentoController.atualizar(dadosAtendimento);
+        res.status(200).json(resposta);
+        }
+         catch (error) {
+        next(error);
+    }
+};
+router.put('/atendimentos/:id', 
+            atualizarAtendimento);
 
-router.patch('/atendimentos/:id', (req, res) => {
-    const editarAtendimento = req.query;
-    const resposta = atendimentoController.atualizarParcial(editarAtendimento);
-    resposta.then(result => res.status(200).json(result)).catch(error => res.status(400).json(error.message));
-});
+router.patch('/atendimentos/:id', 
+            atualizarAtendimento);
 
-router.delete('/atendimentos/:id', (req, res) => {
-    const deletarAtendimento = req.params.id;
-    const resposta = atendimentoController.deletar(deletarAtendimento);
-    resposta.then(result => res.status(200).json(result)).catch(error => res.status(400).json(error.message));
+router.delete('/atendimentos/:id', async (req, res, next) => {
+    try {
+        await atendimentoController.deletar({id: req.params.id});
+        res.status(204).json({ message: 'Atendimento deletado com sucesso' });
+    } catch (error) {
+        next(error);
+    }
 });
 
 

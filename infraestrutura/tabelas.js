@@ -1,10 +1,10 @@
 class Tabelas {
-    init(conexao) {
+    async init(conexao) {
         this.conexao = conexao;
-        this.criarTabelaAtendimentos();
+        await this.criarTabelaAtendimentos();
     }
 
-    criarTabelaAtendimentos() {
+    async criarTabelaAtendimentos() {
         const sql = 
     `CREATE TABLE IF NOT EXISTS atendimento (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, 
@@ -13,13 +13,12 @@ class Tabelas {
 	cliente VARCHAR(100),
 	STATUS ENUM("Pendente", "Realizado com sucesso", "Cancelado") DEFAULT "Pendente");`
 
-    this.conexao.query(sql, (error) => {
-        if (error) {
-            console.log('Erro ao criar tabela de atendimentos: ' + error);
-            return;
-        }
+    try {
+        await this.conexao.query(sql);
         console.log('Tabela de atendimentos criada com sucesso!');
-});
+    } catch (error) {
+        console.log('Erro ao criar tabela de atendimentos: ' + error);
+    }
 }
 }
 
